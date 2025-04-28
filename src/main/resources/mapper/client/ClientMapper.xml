@@ -4,7 +4,7 @@
 
 <mapper namespace="com.example.wehago.client.mapper.ClientMapper">
     <select id="findById" resultType="com.example.wehago.client.dto.ClientEntity">
-        SELECT name FROM client
+        SELECT email FROM client
         WHERE client_id = #{id}
     </select>
 </mapper>
