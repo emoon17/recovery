@@ -7,4 +7,18 @@
         SELECT email FROM client
         WHERE client_id = #{id}
     </select>
+    <select id="selectAllClients" resultType="com.example.wehago.client.dto.ClientEntity">
+        SELECT
+            client_id,
+            business_number,
+            name,
+            industry,
+            email,
+            contact,
+            expected_recovery_days,
+            memo,
+            created_at,
+            updated_at
+        FROM client
+    </select>
 </mapper>
