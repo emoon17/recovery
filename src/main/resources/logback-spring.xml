@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+    <script/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="LOG_PATTERN" value="[%d{ISO8601}] [%5level] [%thread] [%class] [%method:%line] %msg%n"/>
+    <property name="LOG_FILE_PATH" value="./log/basic"/>
+    <!--  Console Appender  -->
+    <appender name="CONSOLE-APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%clr(%d{HH:mm:ss.SSS}){faint}][%clr(${LOG_LEVEL_PATTERN:-%5p})][%clr(%thread){faint}][%clr(%40logger{40}){cyan}][%clr(%3.3line){green}] %clr(:){faint} %m%n</pattern>
+        </encoder>
+    </appender>
+    <!--  SQL 로그 설정  -->
+    <appender name="SQL-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE_PATH}-sql.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATH}-sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>0</totalSizeCap>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <!--  일반 로그 설정  -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE_PATH}.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATH}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>0</totalSizeCap>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <!--  에러 로그 설정  -->
+    <appender name="ERROR-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE_PATH}-error.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATH}-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>0</totalSizeCap>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+    <!--  SQL 로그 설정  -->
+    <logger name="jdbc.sqlonly" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="jdbc.resultsettable" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="org.springframework" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="_org.springframework" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="io" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="org" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="log4jdbc" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="reactor" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="springfox" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="com.zaxxer.hikari" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <logger name="com.ulisesbocchio" additivity="false" level="error">
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE-APPENDER"/>
+    </logger>
+    <!--  불필요한 로그 제거  -->
+    <logger name="jdbc.connection" level="OFF"/>
+    <logger name="jdbc.audit" level="OFF"/>
+    <logger name="jdbc.resultset" level="OFF"/>
+    <!--  루트 로거 설정  -->
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE-APPENDER"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR-FILE"/>
+    </root>
+</configuration>
