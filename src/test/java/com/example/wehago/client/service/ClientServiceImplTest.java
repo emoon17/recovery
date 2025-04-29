@@ -1,6 +1,7 @@
 package com.example.wehago.client.service;
 
 import com.example.wehago.client.dto.ClientEntity;
+import com.example.wehago.client.dto.ClientRequestDto;
 import com.example.wehago.client.dto.ClientResponseDto;
 import com.example.wehago.client.mapper.ClientMapper;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.assertArg;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ClientServiceImplTest {
 
@@ -68,5 +69,27 @@ public class ClientServiceImplTest {
 
         System.out.println("result");
         clients.forEach(c -> System.out.println(c.getName() + " - " + c.getIndustry()));
+    }
+
+    /**
+     * clinet insert
+     * */
+    @Test
+    void insertClient_success() {
+        ClientRequestDto client = ClientRequestDto.builder()
+                .businessNumber("123-45-78945")
+                .name("더존비즈온")
+                .industry("회계/IT")
+                .email("dz@dz.com")
+                .contact("010-4545-4545")
+                .expectedRecoveryDays(30)
+                .memo("붙고싶다!")
+                .build();
+
+        //when
+        clientService.insertClient(client);
+
+        //then
+      //  verify(clientMapper, times(1)).insertClient(client);
     }
 }

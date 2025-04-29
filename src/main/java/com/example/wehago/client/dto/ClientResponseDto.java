@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -20,8 +21,10 @@ public class ClientResponseDto {
     private String contact;           // 거래처 연락처
     private Integer expectedRecoveryDays;  // 평균 회수 예상 일수
     private String memo;              // 메모
+    private String delYn;             // 삭제 여부
     private LocalDateTime createdAt;   // 등록일시
     private LocalDateTime updatedAt;   // 수정일시
+
 
     //Entity -> dto
     public static ClientResponseDto fromEntity(ClientEntity entity) {
@@ -34,8 +37,10 @@ public class ClientResponseDto {
         dto.setContact(entity.getContact());
         dto.setExpectedRecoveryDays(entity.getExpectedRecoveryDays());
         dto.setMemo(entity.getMemo());
+        dto.setDelYn(entity.getDelYn());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
+
         return dto;
     }
 }

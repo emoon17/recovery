@@ -11,4 +11,7 @@ public interface ClientMapper {
 
     ClientEntity findById(@Param("id") int id);
     List<ClientEntity> selectAllClients();
+    void insertClient(@Param("client") ClientEntity client);
+    void updateClient(@Param("client") ClientEntity client);
+    void deleteClient(@Param("client") ClientEntity client);
 }

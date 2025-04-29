@@ -1,6 +1,7 @@
 package com.example.wehago.client.service;
 
 import com.example.wehago.client.dto.ClientEntity;
+import com.example.wehago.client.dto.ClientRequestDto;
 import com.example.wehago.client.dto.ClientResponseDto;
 import com.example.wehago.client.mapper.ClientMapper;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,44 @@ public class ClientServiceImpl implements ClientService {
         return clients.stream()
                 .map(ClientResponseDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void insertClient(ClientRequestDto dto) {
+        ClientEntity clientEntity = ClientEntity.builder()
+                .businessNumber(dto.getBusinessNumber())
+                .name(dto.getName())
+                .industry(dto.getIndustry())
+                .email(dto.getEmail())
+                .contact(dto.getContact())
+                .expectedRecoveryDays(dto.getExpectedRecoveryDays())
+                .memo(dto.getMemo())
+                .build();
+
+        clientMapper.insertClient(clientEntity);
+    }
+
+    @Override
+    public void updateClient(ClientRequestDto dto) {
+        ClientEntity clientEntity = ClientEntity.builder()
+                .clientId(dto.getClientId())
+                .businessNumber(dto.getBusinessNumber())
+                .name(dto.getName())
+                .industry(dto.getIndustry())
+                .email(dto.getEmail())
+                .contact(dto.getContact())
+                .expectedRecoveryDays(dto.getExpectedRecoveryDays())
+                .memo(dto.getMemo())
+                .build();
+        clientMapper.updateClient(clientEntity);
+    }
+
+    @Override
+    public void deleteClient(ClientRequestDto dto) {
+        ClientEntity clientEntity = ClientEntity.builder()
+                .clientId(dto.getClientId())
+                .delYn("Y")
+                .build();
+        clientMapper.deleteClient(clientEntity);
     }
 }

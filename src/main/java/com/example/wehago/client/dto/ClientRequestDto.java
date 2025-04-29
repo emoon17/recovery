@@ -21,8 +21,7 @@ public class ClientRequestDto {
     private String contact;           // 거래처 연락처
     private Integer expectedRecoveryDays;  // 평균 회수 예상 일수
     private String memo;              // 메모
-    private LocalDateTime createdAt;   // 등록일시
-    private LocalDateTime updatedAt;   // 수정일시
+    private String delYn;             // 삭제 여부
 
     public static ClientRequestDto fromEntity(ClientEntity entity) {
         ClientRequestDto dto = new ClientRequestDto();
@@ -34,8 +33,7 @@ public class ClientRequestDto {
         dto.setContact(entity.getContact());
         dto.setExpectedRecoveryDays(entity.getExpectedRecoveryDays());
         dto.setMemo(entity.getMemo());
-        dto.setCreatedAt(entity.getCreatedAt());
-        dto.setUpdatedAt(entity.getUpdatedAt());
+        dto.setDelYn(entity.getDelYn());
         return dto;
     }
 }

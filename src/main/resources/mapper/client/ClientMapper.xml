@@ -20,5 +20,48 @@
             created_at,
             updated_at
         FROM client
+        WHERE del_yn = 'N'
     </select>
+    <insert id="insertClient" parameterType="map">
+        INSERT INTO client
+        (
+            business_number,
+            name,
+            industry,
+            email,
+            contact,
+            expected_recovery_days,
+            memo
+        )
+        VALUES (
+                #{client.businessNumber}
+               ,#{client.name}
+               ,#{client.industry}
+               ,#{client.email}
+               ,#{client.contact}
+               ,#{client.expectedRecoveryDays}
+               ,#{client.memo}
+               )
+    </insert>
+    <update id="updateClient" parameterType="map">
+        UPDATE client
+        SET
+            business_number = #{client.businessNumber},
+            name = #{client.name},
+            industry = #{client.industry},
+            email = #{client.email},
+            contact = #{client.contact},
+            expected_recovery_days = #{client.expectedRecoveryDays},
+            memo = #{client.memo},
+            updated_at = NOW()
+        WHERE
+            client_id = #{client.clientId}
+    </update>
+    <delete id="deleteClient" parameterType="map">
+        UPDATE client
+        SET
+            del_yn = #{client.delYn}
+        WHERE
+            client_id = #{client.clientId}
+    </delete>
 </mapper>

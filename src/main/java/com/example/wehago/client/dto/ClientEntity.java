@@ -18,6 +18,7 @@ public class ClientEntity {
     private String contact;           // 거래처 연락처
     private Integer expectedRecoveryDays;  // 평균 회수 예상 일수
     private String memo;              // 메모
+    private String delYn;             // 삭제 여부
     private LocalDateTime createdAt;   // 등록일시
     private LocalDateTime updatedAt;   // 수정일시
 
