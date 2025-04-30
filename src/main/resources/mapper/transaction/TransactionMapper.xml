@@ -1,0 +1,23 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wehago.transaction.mapper.TransactionMapper">
+<select id="selectAllTransactions" resultType="com.example.wehago.transaction.dto.TransactionResponseDto">
+    SELECT
+        t.tx_id ,
+        t.client_id ,
+        c.name ,
+        c.business_number,
+        t.tx_date ,
+        t.due_date ,
+        t.paid_date ,
+        t.amount
+    from `transaction` t
+    INNER JOIN  client c
+    ON t.client_id = c.client_id
+    <if test="condition.clientId != null and condition.clientId != ''">
+    WHERE
+     client_id = #{condition.clientId}
+    </if>
+</select>
+
+</mapper>

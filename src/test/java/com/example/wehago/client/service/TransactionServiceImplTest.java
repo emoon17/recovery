@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.assertArg;
 import static org.mockito.Mockito.*;
 
-public class ClientServiceImplTest {
+public class TransactionServiceImplTest {
 
     @Mock
     private ClientMapper clientMapper;
@@ -24,7 +24,7 @@ public class ClientServiceImplTest {
     @InjectMocks
     private ClientServiceImpl clientService;
 
-    public ClientServiceImplTest() {
+    public TransactionServiceImplTest() {
         MockitoAnnotations.initMocks(this); // Mock, InjeckMocks활성화
     }
 
