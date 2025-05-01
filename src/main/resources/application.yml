@@ -7,6 +7,12 @@ spring:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     username: root
     password: root
+  main:
+    allow-bean-definition-overriding: true
+  task:
+    scheduling:
+      pool:
+        size: 5
 
 mybatis:
   configuration:
@@ -29,4 +35,5 @@ logging:
     jdbc.sqlonly: DEBUG
     jdbc.sqltiming: DEBUG
     com.zaxxer.hikari: DEBUG
+    com.example.recovery: DEBUG
 
