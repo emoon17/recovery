@@ -13,12 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class TransactionEntity {
-        private String txId;
+        private String transactionId;
         private String clientId;
-        private LocalDateTime txDate;
-        private LocalDateTime dueDate;
-        private LocalDateTime paidDate;
-        private Long amount;
+        private String transactionDate;
+        private Long transactionAmount;
+        private String expectedPaymentDate;
+        private String recoveredDate;
+        private Long recoveredAmount;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 }

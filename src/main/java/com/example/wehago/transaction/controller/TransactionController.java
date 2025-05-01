@@ -6,10 +6,7 @@ import com.example.wehago.transaction.dto.TransactionResponseDto;
 import com.example.wehago.transaction.service.TransactionService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class TransactionController {
     }
 
     @PostMapping("/getAllTransactions")
-    public ApiResponse<List<TransactionResponseDto>> getAllTransactions(TransactionCondition condition) {
-        return ApiResponse.success(transactionService.getAllTransactions(condition));
+    public ApiResponse<List<TransactionResponseDto>> getAllTransactions(@RequestBody TransactionCondition condition) {
+     return ApiResponse.success(transactionService.getAllTransactions(condition));
     }
 }

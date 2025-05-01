@@ -3,20 +3,23 @@
 <mapper namespace="com.example.wehago.transaction.mapper.TransactionMapper">
 <select id="selectAllTransactions" resultType="com.example.wehago.transaction.dto.TransactionResponseDto">
     SELECT
-        t.tx_id ,
+        t.transaction_id ,
         t.client_id ,
         c.name ,
         c.business_number,
-        t.tx_date ,
-        t.due_date ,
-        t.paid_date ,
-        t.amount
+        DATE_FORMAT(t.transaction_date, '%Y-%m-%d') AS transaction_date,
+        t.transaction_amount,
+        DATE_FORMAT(t.expected_payment_date ,'%Y-%m-%d') AS expected_payment_date,
+        DATE_FORMAT(t.recovered_date ,'%Y-%m-%d') AS recovered_date,
+        t.recovered_amount,
+        t.created_at,
+        t.updated_at
     from `transaction` t
     INNER JOIN  client c
     ON t.client_id = c.client_id
     <if test="condition.clientId != null and condition.clientId != ''">
     WHERE
-     client_id = #{condition.clientId}
+     t.client_id = #{condition.clientId}
     </if>
 </select>
 
