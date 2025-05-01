@@ -1,5 +1,6 @@
 package com.example.wehago.transaction.service;
 
+import com.example.wehago.client.service.ClientService;
 import com.example.wehago.transaction.dto.TransactionCondition;
 import com.example.wehago.transaction.dto.TransactionEntity;
 import com.example.wehago.transaction.dto.TransactionRequestDto;
@@ -7,6 +8,9 @@ import com.example.wehago.transaction.dto.TransactionResponseDto;
 import com.example.wehago.transaction.mapper.TransactionMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -14,7 +18,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     private TransactionMapper transactionMapper;
 
-    public TransactionServiceImpl(TransactionMapper transactionMapper) {
+    private ClientService clientService;
+
+    public TransactionServiceImpl(TransactionMapper transactionMapper,ClientService clientService) {
+        this.clientService = clientService;
         this.transactionMapper = transactionMapper;
     }
 
@@ -25,11 +32,15 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void insertTransaction(TransactionRequestDto requestDto) {
+        int expectedRecoverDay = clientService.selectExpectedRecoveryDaysByClientId(requestDto.getClientId());
+        LocalDate transactionDate = LocalDate.parse(requestDto.getTransactionDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        LocalDate expectedPaymentDate = transactionDate.plusDays(expectedRecoverDay);
         TransactionEntity transactionEntity = TransactionEntity.builder()
                 .clientId(requestDto.getClientId())
                 .transactionDate(requestDto.getTransactionDate())
                 .transactionAmount(requestDto.getTransactionAmount())
-                .expectedPaymentDate(requestDto.getExpectedPaymentDate())
+                .expectedPaymentDate(String.valueOf(expectedPaymentDate))
                 .recoveredDate(requestDto.getRecoveredDate())
                 .recoveredAmount(requestDto.getRecoveredAmount())
                 .build();

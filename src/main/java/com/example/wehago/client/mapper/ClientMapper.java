@@ -10,6 +10,7 @@ import java.util.List;
 public interface ClientMapper {
 
     ClientEntity findById(@Param("id") int id);
+    int selectExpectedRecoveryDaysByClientId(@Param("clientId") String clientId);
     List<ClientEntity> selectAllClients();
     void insertClient(@Param("client") ClientEntity client);
     void updateClient(@Param("client") ClientEntity client);

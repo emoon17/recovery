@@ -64,4 +64,8 @@ public class ClientServiceImpl implements ClientService {
                 .build();
         clientMapper.deleteClient(clientEntity);
     }
+
+    public int selectExpectedRecoveryDaysByClientId(String clientId) {
+        return clientMapper.selectExpectedRecoveryDaysByClientId(clientId);
+    }
 }

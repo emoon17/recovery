@@ -22,6 +22,12 @@
         FROM client
         WHERE del_yn = 'N'
     </select>
+    <select id="selectExpectedRecoveryDaysByClientId" parameterType="String">
+        SELECT
+            expected_recovery_days
+        FROM client
+        WHERE  client_id = #{clientId}
+    </select>
     <insert id="insertClient" parameterType="map">
         INSERT INTO client
         (
