@@ -21,6 +21,33 @@
     WHERE
      t.client_id = #{condition.clientId}
     </if>
+    <if test="condition.clientId != null and condition.clientId != ''">
+     ORDER BY transaction_date ASC
+    </if>
+
 </select>
+    <insert id="insertTransaction" parameterType="map">
+        INSERT INTO transaction
+        (
+            client_id,
+            transaction_date,
+            transaction_amount,
+            expected_payment_date,
+            recovered_date,
+            recovered_amount,
+            created_at,
+            updated_at
+        )
+        VALUES (
+                #{entity.clientId},
+                STR_TO_DATE(#{entity.transactionDate}, '%Y-%m-%d'),
+                #{entity.transactionAmount},
+                STR_TO_DATE(#{entity.expectedPaymentDate}, '%Y-%m-%d'),
+                STR_TO_DATE(#{entity.recoveredDate}, '%Y-%m-%d'),
+                #{entity.recoveredAmount},
+                NOW(),
+                NOW()
+               )
+    </insert>
 
 </mapper>
