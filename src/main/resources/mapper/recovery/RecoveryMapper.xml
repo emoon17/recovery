@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.wehago.recovery.mapper.RecoveryMapper">
+    <insert id="bulkInsertRecoveryStats" parameterType="list">
+
+        INSERT INTO recovery_stat
+        (
+            client_id,
+            month,
+            total_amount,
+            recovered_amount,
+            recovered_rate,
+            avg_recovered_days
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+               #{item.clientId},
+               #{item.month},
+               #{item.totalAmount},
+               #{item.recoveredAmount},
+               #{item.recoveredRate},
+               #{item.avgRecoveredDays}
+               )
+        </foreach>
+    </insert>
+</mapper>
