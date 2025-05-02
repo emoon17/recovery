@@ -26,4 +26,20 @@
                )
         </foreach>
     </insert>
+    <select id="selectRecoveryAllStats" resultType="com.example.wehago.recovery.dto.RecoverStatResponseDto">
+        SELECT
+            rs.stat_id ,
+            rs.client_id ,
+            c.name,
+            rs.`month` ,
+            rs.total_amount ,
+            rs.recovered_amount ,
+            rs.recovered_rate ,
+            rs.avg_recovered_days ,
+            rs.created_at
+        FROM recovery_stat rs
+        INNER JOIN client c
+            ON c.client_id = rs.client_id
+        WHERE DATE(rs.created_at) = #{entity.createdAt}
+    </select>
 </mapper>

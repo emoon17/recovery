@@ -14,6 +14,7 @@ public class RecoverStatResponseDto {
 
     private Long statId;                      // 통계 id
     private Long clientId;                    // 거래처 id
+    private String name;                       // 이름
     private String month;                    // 월
     private Long totalAmount;               // 전체 거래 금액
     private Long recoveredAmount;           // 총 회수금액

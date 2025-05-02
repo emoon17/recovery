@@ -1,13 +1,19 @@
 package com.example.wehago.recovery.controller;
 
 import com.example.wehago.common.ApiResponse;
+import com.example.wehago.recovery.dto.RecoverStatResponseDto;
+import com.example.wehago.recovery.dto.RecoveryRequestDto;
 import com.example.wehago.recovery.dto.RecoveryStatEntity;
 import com.example.wehago.recovery.service.RecoverService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+import static com.example.wehago.common.ApiResponse.fail;
 import static com.example.wehago.common.ApiResponse.success;
 
 @RestController
@@ -20,10 +26,27 @@ public class RecoveryStatController {
         this.recoverService = recoverService;
     }
 
+    /**
+     * 테스트용
+     * */
     @PostMapping("/calculate")
     public ApiResponse<String> calculate() {
         recoverService.getRecoveryStats(new RecoveryStatEntity());
         return success("ok");
 
     }
+
+    /**
+     * 전일 날짜 거래처 회수율 전체 조회
+     * */
+    @PostMapping("/getRecoveryAllStats")
+    public ApiResponse<List<RecoverStatResponseDto>> getRecoveryAllStats(@RequestBody RecoveryRequestDto request) {
+        try {
+            List<RecoverStatResponseDto> resList = recoverService.getRecoveryAllStats(request);
+            return success(resList);
+        } catch (Exception e) {
+            return fail("거래처 회수율 전체 조회 실패 : " + e.getMessage());
+        }
+    }
+
 }

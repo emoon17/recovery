@@ -1,6 +1,7 @@
 package com.example.wehago.recovery.service;
 
 import com.example.wehago.recovery.dto.RecoverStatResponseDto;
+import com.example.wehago.recovery.dto.RecoveryRequestDto;
 import com.example.wehago.recovery.dto.RecoveryStatEntity;
 import com.example.wehago.recovery.mapper.RecoveryMapper;
 import com.example.wehago.transaction.dto.TransactionRecoveryStatsResponseDto;
@@ -40,4 +41,14 @@ public class RecoverServiceImpl implements RecoverService {
         recoveryMapper.bulkInsertRecoveryStats(entities);
 
     }
+
+    @Override
+    public List<RecoverStatResponseDto> getRecoveryAllStats(RecoveryRequestDto request) {
+        RecoveryStatEntity entity = RecoveryStatEntity.builder()
+                .createdAt(request.getCreatedAt())
+                .build();
+        return recoveryMapper.selectRecoveryAllStats(entity);
+    }
+
+
 }
