@@ -49,5 +49,24 @@
                 NOW()
                )
     </insert>
+    <select id="selectTransactionRecoveryStats" resultType="com.example.wehago.transaction.dto.TransactionRecoveryStatsResponseDto">
+        SELECT
+            c.client_id,
+            c.name,
+            COUNT(*) AS total_count,
+            SUM(CASE WHEN t.expected_payment_date &lt;= NOW() THEN t.transaction_amount ELSE 0 END) AS total_amount,
+            SUM(CASE WHEN t.expected_payment_date &lt;= NOW() THEN t.recovered_amount ELSE 0 END) AS recovered_amount,
+            ROUND(
+            SUM(CASE WHEN t.expected_payment_date &lt;= NOW() THEN t.recovered_amount ELSE 0 END) /
+            NULLIF(SUM(CASE WHEN t.expected_payment_date &lt;= NOW() THEN t.transaction_amount ELSE 0 END), 0) * 100, 2
+            ) AS recovered_rate,
+            ROUND(AVG(DATEDIFF(t.recovered_date, t.transaction_date))) AS avg_recovered_days,
+            NOW() AS created_at,
+            DATE_FORMAT(NOW(), '%Y-%m') AS month
+        FROM `transaction` t
+        JOIN client c ON c.client_id = t.client_id
+        where t.expected_payment_date &lt;= NOW()
+        GROUP BY c.client_id, c.name
+    </select>
 
 </mapper>

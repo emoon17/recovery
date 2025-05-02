@@ -1,10 +1,7 @@
 package com.example.wehago.transaction.service;
 
 import com.example.wehago.client.service.ClientService;
-import com.example.wehago.transaction.dto.TransactionCondition;
-import com.example.wehago.transaction.dto.TransactionEntity;
-import com.example.wehago.transaction.dto.TransactionRequestDto;
-import com.example.wehago.transaction.dto.TransactionResponseDto;
+import com.example.wehago.transaction.dto.*;
 import com.example.wehago.transaction.mapper.TransactionMapper;
 import org.springframework.stereotype.Service;
 
@@ -46,4 +43,11 @@ public class TransactionServiceImpl implements TransactionService {
                 .build();
         transactionMapper.insertTransaction(transactionEntity);
     }
+
+    @Override
+    public List<TransactionRecoveryStatsResponseDto> getTransactionRecoveryStats() {
+        return transactionMapper.selectTransactionRecoveryStats();
+    }
+
+
 }
