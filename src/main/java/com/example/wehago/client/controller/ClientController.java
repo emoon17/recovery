@@ -49,7 +49,7 @@ public class ClientController extends BaseController {
      * @param : client
      */
     @PostMapping("/insertClient")
-    public ApiResponse<Void> insertClient(ClientRequestDto dto) {
+    public ApiResponse<Void> insertClient(@RequestBody ClientRequestDto dto) {
         try {
             clientService.insertClient(dto);
             return success();
