@@ -50,23 +50,44 @@
                )
     </insert>
     <select id="selectTransactionRecoveryStats" resultType="com.example.wehago.transaction.dto.TransactionRecoveryStatsResponseDto">
+    <!-- selectTransactionRecoveryStats 전일 기준날짜 -->
         SELECT
             c.client_id,
             c.name,
-            COUNT(*) AS total_count,
-            SUM(CASE WHEN t.expected_payment_date &lt;= NOW() THEN t.transaction_amount ELSE 0 END) AS total_amount,
-            SUM(CASE WHEN t.expected_payment_date &lt;= NOW() THEN t.recovered_amount ELSE 0 END) AS recovered_amount,
+            COUNT(1) AS total_count,
+            SUM(CASE WHEN t.expected_payment_date &lt; NOW() THEN t.transaction_amount ELSE 0 END) AS total_amount,
+            SUM(CASE WHEN t.expected_payment_date &lt; NOW() THEN t.recovered_amount ELSE 0 END) AS recovered_amount,
             ROUND(
-            SUM(CASE WHEN t.expected_payment_date &lt;= NOW() THEN t.recovered_amount ELSE 0 END) /
-            NULLIF(SUM(CASE WHEN t.expected_payment_date &lt;= NOW() THEN t.transaction_amount ELSE 0 END), 0) * 100, 2
+            SUM(CASE WHEN t.expected_payment_date &lt; NOW() THEN t.recovered_amount ELSE 0 END) /
+            NULLIF(SUM(CASE WHEN t.expected_payment_date &lt; NOW() THEN t.transaction_amount ELSE 0 END), 0) * 100, 2
             ) AS recovered_rate,
-            ROUND(AVG(DATEDIFF(t.recovered_date, t.transaction_date))) AS avg_recovered_days,
-            NOW() AS created_at,
+            ROUND(AVG(
+            CASE
+            WHEN t.recovered_date IS NOT NULL THEN DATEDIFF(t.recovered_date, t.transaction_date)
+            ELSE DATEDIFF(DATE_SUB(CURDATE(), INTERVAL 1 DAY), t.transaction_date)
+            END
+            )) AS avg_recovered_days,
             DATE_FORMAT(NOW(), '%Y-%m') AS month
         FROM `transaction` t
         JOIN client c ON c.client_id = t.client_id
-        where t.expected_payment_date &lt;= NOW()
+        where  DATE(t.expected_payment_date) &lt; CURDATE()
         GROUP BY c.client_id, c.name
     </select>
+
+<!--    <select>-->
+<!--        SELECT-->
+<!--            ROUND(SUM(t.recovered_amount) / NULLIF(SUM(t.transaction_amount), 0) * 100, 2) AS avg_recovered_rate,-->
+<!--            SUM(CASE-->
+<!--            WHEN t.recovered_date IS NOT NULL THEN DATEDIFF(t.recovered_date, t.transaction_date)-->
+<!--            ELSE DATEDIFF(DATE_SUB(CURDATE(), INTERVAL 1 DAY), t.transaction_date)-->
+<!--            END) AS total_days,-->
+<!--            COUNT(*) AS total_count,-->
+<!--            ROUND(SUM(CASE-->
+<!--        WHEN t.recovered_date IS NOT NULL THEN DATEDIFF(t.recovered_date, t.transaction_date)-->
+<!--        ELSE DATEDIFF(DATE_SUB(CURDATE(), INTERVAL 1 DAY), t.transaction_date)-->
+<!--        END) / COUNT(*), 0) AS accurate_avg_days-->
+<!--        FROM `transaction` t-->
+<!--        WHERE DATE(t.expected_payment_date) &lt; CURDATE()-->
+<!--    </select>-->
 
 </mapper>

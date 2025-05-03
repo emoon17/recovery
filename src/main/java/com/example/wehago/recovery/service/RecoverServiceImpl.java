@@ -8,6 +8,8 @@ import com.example.wehago.transaction.dto.TransactionRecoveryStatsResponseDto;
 import com.example.wehago.transaction.service.TransactionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +29,6 @@ public class RecoverServiceImpl implements RecoverService {
     public void getRecoveryStats(RecoveryStatEntity entity) {
         List<TransactionRecoveryStatsResponseDto> resDto = transactionService.getTransactionRecoveryStats();
 
-
         List<RecoveryStatEntity> entities = resDto.stream()
                 .map(dto -> RecoveryStatEntity.builder()
                         .clientId(dto.getClientId())
@@ -43,9 +44,11 @@ public class RecoverServiceImpl implements RecoverService {
     }
 
     @Override
-    public List<RecoverStatResponseDto> getRecoveryAllStats(RecoveryRequestDto request) {
+    public List<RecoverStatResponseDto> getRecoveryAllStats() {
+        String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
         RecoveryStatEntity entity = RecoveryStatEntity.builder()
-                .createdAt(request.getCreatedAt())
+                .createdAt(yesterday)
                 .build();
         return recoveryMapper.selectRecoveryAllStats(entity);
     }

@@ -13,5 +13,5 @@ public interface RecoverService {
 
 
     void getRecoveryStats(@Param("entity")RecoveryStatEntity entity);
-    List<RecoverStatResponseDto> getRecoveryAllStats(@RequestBody RecoveryRequestDto request);
+    List<RecoverStatResponseDto> getRecoveryAllStats();
 }
