@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.wehago.predict.mapper.PredictionMapper">
+
+    <select id="selectPredictionTargets" resultType="com.example.wehago.predict.dto.PredictionTargetDto">
+    <!-- 회수 지연 request  -->
+        SELECT
+            t.transaction_id AS tx_id,
+            t.client_id,
+            t.transaction_amount,
+            c.industry,
+            c.expected_recovery_days
+        FROM `transaction` t
+        JOIN `client` c
+            ON t.client_id = c.client_id
+        LEFT JOIN prediction_risk  pr
+            ON pr.tx_id = t.transaction_id
+        WHERE
+        t.recovered_date IS NULL         <!-- 아직 회수되지 않은 거래 -->
+        AND DATE(t.expected_payment_date) &lt;= DATE_SUB(CURDATE(), INTERVAL 1 DAY) <!-- 이미 회수 예정일이 지남(전날ㅈ기준) -->
+        AND pr.tx_id IS NULL <!-- 테이블에 없음 => 아직 예측 안 된 거래  0 -->
+    </select>
+    <insert id="insertRiskPrediction" parameterType="com.example.wehago.predict.dto.PredictionRiskEntity">
+        INSERT INTO prediction_risk (
+            client_id,
+            tx_id,
+            predicted_delay,
+            risk_level,
+            comment,
+            created_at,
+            updated_at
+        ) VALUES (
+                     #{clientId},
+                     #{txId},
+                     #{predictedDelay},
+                     #{riskLevel},
+                     #{comment},
+                     NOW(),
+                     NOW()
+                 )
+    </insert>
+</mapper>

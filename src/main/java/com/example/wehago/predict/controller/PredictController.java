@@ -20,6 +20,7 @@ public class PredictController {
         this.webClient = webClient;
     }
 
+    // 테스트용
     @PostMapping("/delayDays")
     public Mono<String> predictDelay (@RequestBody Map<String, String> request) {
         return webClient.post()
@@ -29,4 +30,5 @@ public class PredictController {
                 .retrieve()
                 .bodyToMono(String.class);
     }
+
 }
