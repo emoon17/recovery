@@ -33,7 +33,7 @@ public class PredictionScheduler {
         }
     }
 
-    //    @Scheduled(cron = "0 * * * * *") // 매 분마다
+//        @Scheduled(cron = "0 * * * * *") // 매 분마다
     @Scheduled(cron = "0 3 0 * * *")
     public void runTrainingJob() {
         LocalDate statDate = LocalDate.now().minusDays(1);
