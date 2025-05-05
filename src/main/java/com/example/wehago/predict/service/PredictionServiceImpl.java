@@ -1,5 +1,6 @@
 package com.example.wehago.predict.service;
 
+import com.example.wehago.predict.dto.PredictRiskTableResponse;
 import com.example.wehago.predict.dto.PredictionResponseDto;
 import com.example.wehago.predict.dto.PredictionRiskEntity;
 import com.example.wehago.predict.dto.PredictionTargetDto;
@@ -8,6 +9,7 @@ import com.example.wehago.predict.mapper.PredictionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -46,6 +48,8 @@ public class PredictionServiceImpl implements PredictionService {
         }
     }
 
+
+
     @Override
     public void predictTrain() {
         try {
@@ -54,5 +58,12 @@ public class PredictionServiceImpl implements PredictionService {
         } catch (Exception e) {
             log.error(" 모델 학습 요청 실패: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<PredictRiskTableResponse> getAllPredicts() {
+        LocalDate yesterDate = LocalDate.now().minusDays(1);
+        String yesterday = yesterDate.toString();
+        return predictionMapper.getAllPredicts(yesterday);
     }
 }
