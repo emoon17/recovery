@@ -24,32 +24,36 @@ public class DummyTransactionScheduler {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        for (int i = 0; i < 30; i++) {
+            int randomClientId = random.nextInt(15) + 1; // 1~15번 클라이언트만 사용
 
-        for (int i = 0; i < 10; i++) {
-            int randomClientId = random.nextInt(23) + 1;
+            // 지연일  (0~50일)
+            int delayDays;
+            double r = random.nextDouble();
+            if (r < 0.5) delayDays = random.nextInt(5);         // LOW
+            else if (r < 0.8) delayDays = 5 + random.nextInt(10); // MEDIUM
+            else delayDays = 15 + random.nextInt(35);           // HIGH
 
-            //  회수 지연일 설정: 70%는 LOW (0~6), 30%는 HIGH (7~15)
-            int delay;
-            if (random.nextDouble() < 0.7) {
-                delay = random.nextInt(7);           // LOW
-            } else {
-                delay = 7 + random.nextInt(9);       // HIGH
-            }
+            // 회수율 (0%, 30%, 50%, 70%, 100%)
+            int[] recoveryRates = {0, 30, 50, 70, 100};
+            int recoveryRate = recoveryRates[random.nextInt(recoveryRates.length)];
 
-            int paymentDelay = random.nextInt(10) + 1; // 1~10일 전의 예상 회수일
+            // 날짜 계산
+            LocalDate expectedPaymentDate = today.minusDays(random.nextInt(10) + 1);
+            LocalDate transactionDate = expectedPaymentDate.minusDays(random.nextInt(5) + 1);
+            LocalDate recoveredDate = (recoveryRate == 0) ? null : expectedPaymentDate.plusDays(delayDays);
 
-            LocalDate expectedPaymentDate = today.minusDays(paymentDelay);
-            LocalDate recoveredDate = expectedPaymentDate.plusDays(delay);
-            LocalDate transactionDate = expectedPaymentDate.minusDays(5);
-            long amount = (random.nextInt(90) + 10) * 10_000L; // 100,000 ~ 1,000,000
+            // 금액
+            long amount = (random.nextInt(90) + 10) * 10_000L;
+            long recoveredAmount = (long) (amount * recoveryRate / 100.0);
 
             TransactionEntity entity = TransactionEntity.builder()
                     .clientId(String.valueOf(randomClientId))
                     .transactionDate(transactionDate.format(formatter))
                     .transactionAmount(amount)
                     .expectedPaymentDate(expectedPaymentDate.format(formatter))
-                    .recoveredDate(recoveredDate.format(formatter))
-                    .recoveredAmount(amount)
+                    .recoveredDate(recoveredDate != null ? recoveredDate.format(formatter) : null)
+                    .recoveredAmount(recoveredAmount)
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())
                     .build();
