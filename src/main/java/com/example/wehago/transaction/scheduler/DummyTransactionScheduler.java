@@ -18,6 +18,7 @@ public class DummyTransactionScheduler {
     private final TransactionMapper transactionMapper;
 
     @Scheduled(cron = "0 30 23 * * *") // 매일 23:30 실행
+//    @Scheduled(cron = "0 * * * * *")
     public void insertDummyTransactions() {
         Random random = new Random();
         LocalDate today = LocalDate.now();
