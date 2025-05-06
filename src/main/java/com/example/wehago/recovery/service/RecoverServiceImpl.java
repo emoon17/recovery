@@ -9,6 +9,7 @@ import com.example.wehago.transaction.service.TransactionService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,11 +46,15 @@ public class RecoverServiceImpl implements RecoverService {
 
     @Override
     public List<RecoverStatResponseDto> getRecoveryAllStats() {
-        String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
+        String yesterday = LocalDate.now(ZoneId.of("Asia/Seoul"))
+                .minusDays(1)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         RecoveryStatEntity entity = RecoveryStatEntity.builder()
                 .createdAt(yesterday)
                 .build();
+        System.out.println("NOW: " + LocalDate.now());
+        System.out.println("KST NOW: " + LocalDate.now(ZoneId.of("Asia/Seoul")));
+        System.out.println("KST YESTERDAY: " + LocalDate.now(ZoneId.of("Asia/Seoul")).minusDays(1));
         return recoveryMapper.selectRecoveryAllStats(entity);
     }
 
