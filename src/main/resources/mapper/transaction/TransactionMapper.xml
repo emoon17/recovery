@@ -54,6 +54,7 @@
         SELECT
             c.client_id,
             c.name,
+            MIN(t.transaction_date ) as start_transaction_date,
             COUNT(1) AS total_count,
             SUM(CASE WHEN t.expected_payment_date &lt; NOW() THEN t.transaction_amount ELSE 0 END) AS total_amount,
             SUM(CASE WHEN t.expected_payment_date &lt; NOW() THEN t.recovered_amount ELSE 0 END) AS recovered_amount,

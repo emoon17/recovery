@@ -38,6 +38,7 @@ public class RecoverServiceImpl implements RecoverService {
                         .recoveredAmount(dto.getRecoveredAmount())
                         .recoveredRate(dto.getRecoveredRate())
                         .avgRecoveredDays(dto.getAvgRecoveredDays())
+                        .startTransactionDate(dto.getStartTransactionDate())
                         .build())
                 .collect(Collectors.toList());
         recoveryMapper.bulkInsertRecoveryStats(entities);

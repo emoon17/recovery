@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class TransactionRecoveryStatsResponseDto {
     private Long clientId;                // 거래처ID
     private String name;                    // 거래처명
+    private String startTransactionDate;    // 거래 최초 시작 날짜
     private Long totalCount;                // 총 건수
     private Long totalAmount;               // 총 거래금액
     private Long recoveredAmount;           // 총 회수금액

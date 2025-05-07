@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class RecoveryStatEntity {
     private Long statId;                      // 통계 id
     private Long clientId;                    // 거래처 id
+    private String startTransactionDate;    // 거래 최초 시작 날짜
     private String month;                    // 월
     private Long totalAmount;               // 전체 거래 금액
     private Long recoveredAmount;           // 총 회수금액
