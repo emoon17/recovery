@@ -24,7 +24,7 @@ public class DummyTransactionScheduler {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 10; i++) {
             int randomClientId = random.nextInt(15) + 1; // 1~15번 클라이언트만 사용
 
             // 지연일  (0~50일)

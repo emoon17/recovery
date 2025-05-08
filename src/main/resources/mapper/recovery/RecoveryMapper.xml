@@ -19,8 +19,8 @@
         <foreach collection="list" item="item" separator=",">
             (
                #{item.clientId},
-               #{item.startTransactionDate},
                #{item.month},
+               #{item.startTransactionDate},
                #{item.totalAmount},
                #{item.recoveredAmount},
                #{item.recoveredRate},
