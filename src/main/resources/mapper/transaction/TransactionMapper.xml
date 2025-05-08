@@ -21,9 +21,7 @@
     WHERE
      t.client_id = #{condition.clientId}
     </if>
-    <if test="condition.clientId != null and condition.clientId != ''">
-     ORDER BY transaction_date ASC
-    </if>
+     ORDER BY transaction_date desc
 
 </select>
     <insert id="insertTransaction" parameterType="map">

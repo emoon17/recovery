@@ -24,7 +24,7 @@
         OR DATE(t.recovered_date) > DATE(t.expected_payment_date)
         )
         AND DATE(t.expected_payment_date) &lt;= DATE_SUB(CURDATE(), INTERVAL 1 DAY) <!-- 이미 회수 예정일이 지남(전날ㅈ기준) -->
-        AND pr.tx_id IS NULL <!-- 테이블에 없음 => 아직 예측 안 된 거래  0 -->
+--         AND pr.tx_id IS NULL <!-- 테이블에 없음 => 아직 예측 안 된 거래  0 -->
     </select>
     <insert id="insertRiskPrediction" parameterType="com.example.wehago.predict.dto.PredictionRiskEntity">
         INSERT INTO prediction_risk (

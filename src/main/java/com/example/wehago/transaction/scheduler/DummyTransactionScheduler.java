@@ -41,7 +41,13 @@ public class DummyTransactionScheduler {
             // 날짜 계산
             LocalDate expectedPaymentDate = today.minusDays(random.nextInt(10) + 1);
             LocalDate transactionDate = expectedPaymentDate.minusDays(random.nextInt(5) + 1);
-            LocalDate recoveredDate = (recoveryRate == 0) ? null : expectedPaymentDate.plusDays(delayDays);
+            LocalDate recoveredDate = null;
+            if (recoveryRate != 0) {
+                LocalDate calculatedDate = expectedPaymentDate.plusDays(delayDays);
+                recoveredDate = calculatedDate.isAfter(today)
+                        ? today.minusDays(random.nextInt(3)) // 오늘보다 미래면 최대 2일 전으로 조정
+                        : calculatedDate;
+            }
 
             // 금액
             long amount = (random.nextInt(90) + 10) * 10_000L;
