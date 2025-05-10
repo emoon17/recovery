@@ -28,6 +28,12 @@
         FROM client
         WHERE  client_id = #{clientId}
     </select>
+    <select id="selectEmailByClientId" parameterType="String">
+        SELECT
+            email
+        FROM client
+        WHERE client_id = #{clientId}
+    </select>
     <insert id="insertClient" parameterType="map">
         INSERT INTO client
         (

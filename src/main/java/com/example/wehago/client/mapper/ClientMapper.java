@@ -15,4 +15,5 @@ public interface ClientMapper {
     void insertClient(@Param("client") ClientEntity client);
     void updateClient(@Param("client") ClientEntity client);
     void deleteClient(@Param("client") ClientEntity client);
+    String selectEmailByClientId(String clientId);
 }

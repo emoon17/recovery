@@ -14,4 +14,5 @@ public interface ClientService {
     void updateClient(ClientRequestDto dto);
     void deleteClient(ClientRequestDto dto);
     int selectExpectedRecoveryDaysByClientId(String clientId);
+    String selectEmailByClientId(String clientId);
 }

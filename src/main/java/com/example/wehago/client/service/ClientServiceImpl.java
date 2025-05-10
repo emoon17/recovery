@@ -68,4 +68,9 @@ public class ClientServiceImpl implements ClientService {
     public int selectExpectedRecoveryDaysByClientId(String clientId) {
         return clientMapper.selectExpectedRecoveryDaysByClientId(clientId);
     }
+
+    @Override
+    public String selectEmailByClientId(String clientId) {
+        return clientMapper.selectEmailByClientId(clientId);
+    }
 }

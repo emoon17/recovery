@@ -13,6 +13,17 @@ spring:
     scheduling:
       pool:
         size: 5
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: eunhea62@gmail.com
+    password: aqeajccthxsoieqj
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 mybatis:
   configuration:

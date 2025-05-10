@@ -51,6 +51,7 @@
             pr.client_id ,
             pr.tx_id ,
             pr.predicted_delay ,
+            t.transaction_date,
             DATEDIFF(t.recovered_date, t.expected_payment_date)  AS real_delay,
             ABS(DATEDIFF(t.recovered_date, t.expected_payment_date) - pr.predicted_delay) AS abs_error,
             pr.risk_level ,
