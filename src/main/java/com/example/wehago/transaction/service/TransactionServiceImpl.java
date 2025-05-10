@@ -49,5 +49,18 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionMapper.selectTransactionRecoveryStats();
     }
 
+    @Override
+    public void updateTransaction(TransactionRequestDto requestDto) {
+        TransactionEntity transactionEntity = TransactionEntity.builder()
+                .transactionId(requestDto.getTransactionId())
+                .clientId(requestDto.getClientId())
+                .transactionDate(requestDto.getTransactionDate())
+                .recoveredDate(requestDto.getRecoveredDate())
+                .transactionAmount(requestDto.getTransactionAmount())
+                .recoveredAmount(requestDto.getRecoveredAmount())
+                .build();
+        transactionMapper.updateTransaction(transactionEntity);
+    }
+
 
 }

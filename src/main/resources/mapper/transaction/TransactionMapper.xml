@@ -73,6 +73,20 @@
         GROUP BY c.client_id, c.name
     </select>
 
+    <update id="updateTransaction" parameterType="map">
+        UPDATE `transaction` t
+        SET
+            transaction_date = #{entity.transactionDate},
+            transaction_amount = #{entity.transactionAmount},
+            recovered_date = #{entity.recoveredDate},
+            recovered_amount = #{entity.recoveredAmount},
+            updated_at = NOW()
+        WHERE
+            transaction_id = #{entity.transactionId}
+        AND
+            client_id = #{entity.clientId}
+    </update>
+
 <!--    <select>-->
 <!--        SELECT-->
 <!--            ROUND(SUM(t.recovered_amount) / NULLIF(SUM(t.transaction_amount), 0) * 100, 2) AS avg_recovered_rate,-->

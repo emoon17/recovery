@@ -39,4 +39,14 @@ public class TransactionController {
             return fail("거래 등록 실패 : " + e.getMessage());
         }
     }
+
+    @PostMapping("/updateTransaction")
+    public ApiResponse<Void> updateTransaction(@RequestBody TransactionRequestDto requestDto) {
+        try {
+            transactionService.updateTransaction(requestDto);
+            return success(null);
+        }catch (Exception e){
+            return fail("거래 수정 실패 : " + e.getMessage());
+        }
+    }
 }

@@ -13,4 +13,5 @@ public interface TransactionService {
     List<TransactionResponseDto> getAllTransactions(TransactionCondition condition);
     void insertTransaction( TransactionRequestDto requestDto);
     List<TransactionRecoveryStatsResponseDto> getTransactionRecoveryStats();
+    void updateTransaction(TransactionRequestDto requestDto);
 }

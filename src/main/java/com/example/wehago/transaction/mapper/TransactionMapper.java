@@ -12,4 +12,5 @@ public interface TransactionMapper {
     List<TransactionResponseDto> selectAllTransactions(@Param("condition") TransactionCondition condition);
     void insertTransaction(@Param("entity") TransactionEntity entity);
     List<TransactionRecoveryStatsResponseDto> selectTransactionRecoveryStats();
+    void updateTransaction(@Param("entity") TransactionEntity entity);
 }
