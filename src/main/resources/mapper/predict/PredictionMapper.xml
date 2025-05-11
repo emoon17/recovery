@@ -59,12 +59,12 @@
             MAX(pr.comment) AS comment,
             pr.created_at AS created_at
         FROM prediction_risk pr
-                 INNER JOIN `transaction` t
-                            ON t.transaction_id = pr.tx_id
-                                AND t.client_id = pr.client_id
-                 INNER JOIN client c
-                            ON c.client_id = t.client_id
-        WHERE DATE(pr.created_at) BETWEEN DATE_SUB('2025-05-10', INTERVAL 6 DAY) and '2025-05-10'
+        INNER JOIN `transaction` t
+             ON t.transaction_id = pr.tx_id
+             AND t.client_id = pr.client_id
+        INNER JOIN client c
+             ON c.client_id = t.client_id
+        WHERE DATE(pr.created_at) BETWEEN DATE_SUB(#{yesterday}, INTERVAL 6 DAY) AND #{yesterday}
         GROUP BY pr.tx_id, pr.created_at
         ORDER BY transaction_date DESC;
     </select>
