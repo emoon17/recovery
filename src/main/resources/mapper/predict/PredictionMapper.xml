@@ -48,23 +48,31 @@
     <select id="getAllPredicts" resultType="com.example.wehago.predict.dto.PredictRiskTableResponse">
         SELECT
             MAX(c.name) AS name,
-            MAX(pr.client_id) as client_id,
+            MAX(pr.client_id) AS client_id,
             pr.tx_id,
             MAX(pr.predicted_delay) AS predicted_delay,
             MAX(t.transaction_date) AS transaction_date,
-            MAX(t.transaction_amount) as transaction_amount,
-            DATEDIFF(t.recovered_date, t.expected_payment_date) AS real_delay,
-            ABS(DATEDIFF(t.recovered_date, t.expected_payment_date) - MAX(pr.predicted_delay)) AS abs_error,
+            MAX(t.transaction_amount) AS transaction_amount,
+            DATEDIFF(MAX(t.recovered_date), MAX(t.expected_payment_date)) AS real_delay,
+            ABS(DATEDIFF(MAX(t.recovered_date), MAX(t.expected_payment_date)) - MAX(pr.predicted_delay)) AS abs_error,
             MAX(pr.risk_level) AS risk_level,
             MAX(pr.comment) AS comment,
-            pr.created_at AS created_at
+            pr.created_at
         FROM prediction_risk pr
+        INNER JOIN (
+            SELECT tx_id, client_id, DATE(created_at) AS created_date, MAX(created_at) AS latest_created_at
+            FROM prediction_risk
+            WHERE DATE(created_at) BETWEEN DATE_SUB(#{yesterday}, INTERVAL 6 DAY) AND #{yesterday}
+            GROUP BY tx_id, client_id, DATE(created_at)
+        ) latest
+            ON pr.tx_id = latest.tx_id
+            AND pr.client_id = latest.client_id
+            AND DATE(pr.created_at) = latest.created_date
+            AND pr.created_at = latest.latest_created_at
         INNER JOIN `transaction` t
-             ON t.transaction_id = pr.tx_id
-             AND t.client_id = pr.client_id
+            ON t.transaction_id = pr.tx_id AND t.client_id = pr.client_id
         INNER JOIN client c
-             ON c.client_id = t.client_id
-        WHERE DATE(pr.created_at) BETWEEN DATE_SUB(#{yesterday}, INTERVAL 6 DAY) AND #{yesterday}
+            ON c.client_id = t.client_id
         GROUP BY pr.tx_id, pr.created_at
         ORDER BY transaction_date DESC;
     </select>

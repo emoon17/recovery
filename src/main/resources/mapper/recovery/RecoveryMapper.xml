@@ -30,19 +30,20 @@
     </insert>
     <select id="selectRecoveryAllStats" resultType="com.example.wehago.recovery.dto.RecoverStatResponseDto">
         SELECT
-            rs.stat_id ,
-            rs.client_id ,
-            DATE(rs.start_transaction_date) AS start_transaction_date,
-            c.name,
-            rs.`month` ,
-            rs.total_amount ,
-            rs.recovered_amount ,
-            rs.recovered_rate ,
-            rs.avg_recovered_days ,
-            rs.created_at
+            MAX(rs.stat_id) stat_id,
+            rs.client_id,
+            MAX(DATE(rs.start_transaction_date)) AS start_transaction_date,
+            MAX(c.name) AS name,
+            MAX(rs.`month`) AS `month` ,
+            MAX(rs.total_amount) AS total_amount,
+            MAX(rs.recovered_amount ) AS recovered_amount,
+            MAX(rs.recovered_rate) AS recovered_rate ,
+            MAX(rs.avg_recovered_days) AS avg_recovered_days,
+            MAX(rs.created_at) AS created_at
         FROM recovery_stat rs
         INNER JOIN client c
             ON c.client_id = rs.client_id
         WHERE DATE(rs.created_at) = #{entity.createdAt}
+        GROUP BY client_id
     </select>
 </mapper>
