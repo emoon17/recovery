@@ -47,24 +47,25 @@
     </insert>
     <select id="getAllPredicts" resultType="com.example.wehago.predict.dto.PredictRiskTableResponse">
         SELECT
-            c.name,
-            pr.client_id ,
-            pr.tx_id ,
-            pr.predicted_delay ,
-            t.transaction_date,
-            DATEDIFF(t.recovered_date, t.expected_payment_date)  AS real_delay,
-            ABS(DATEDIFF(t.recovered_date, t.expected_payment_date) - pr.predicted_delay) AS abs_error,
-            pr.risk_level ,
-            pr.comment ,
-            pr.created_at
+            MAX(c.name) AS name,
+            MAX(pr.client_id) as client_id,
+            pr.tx_id,
+            MAX(pr.predicted_delay) AS predicted_delay,
+            MAX(t.transaction_date) AS transaction_date,
+            MAX(t.transaction_amount) as transaction_amount,
+            DATEDIFF(t.recovered_date, t.expected_payment_date) AS real_delay,
+            ABS(DATEDIFF(t.recovered_date, t.expected_payment_date) - MAX(pr.predicted_delay)) AS abs_error,
+            MAX(pr.risk_level) AS risk_level,
+            MAX(pr.comment) AS comment,
+            pr.created_at AS created_at
         FROM prediction_risk pr
-        INNER JOIN `transaction` t
-            ON t.transaction_id  = pr.tx_id
-            AND t.client_id = pr.client_id
-        INNER JOIN client c
-                   ON c.client_id = t.client_id
-        WHERE DATE(pr.created_at) BETWEEN DATE_SUB(#{yesterday}, INTERVAL 6 DAY)
-        AND #{yesterday}
-        ORDER BY abs_error DESC;
+                 INNER JOIN `transaction` t
+                            ON t.transaction_id = pr.tx_id
+                                AND t.client_id = pr.client_id
+                 INNER JOIN client c
+                            ON c.client_id = t.client_id
+        WHERE DATE(pr.created_at) BETWEEN DATE_SUB('2025-05-10', INTERVAL 6 DAY) and '2025-05-10'
+        GROUP BY pr.tx_id, pr.created_at
+        ORDER BY transaction_date DESC;
     </select>
 </mapper>
