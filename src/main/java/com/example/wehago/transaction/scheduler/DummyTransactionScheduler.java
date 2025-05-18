@@ -39,8 +39,9 @@ public class DummyTransactionScheduler {
             int recoveryRate = recoveryRates[random.nextInt(recoveryRates.length)];
 
             // 날짜 계산
-            LocalDate expectedPaymentDate = today.minusDays(random.nextInt(10) + 1);
-            LocalDate transactionDate = expectedPaymentDate.minusDays(random.nextInt(5) + 1);
+//            LocalDate expectedPaymentDate = today.minusDays(random.nextInt(10) + 1);
+            LocalDate expectedPaymentDate = today;
+            LocalDate transactionDate = expectedPaymentDate.minusDays(random.nextInt(30) + 1);
             LocalDate recoveredDate = null;
             if (recoveryRate != 0) {
                 LocalDate calculatedDate = expectedPaymentDate.plusDays(delayDays);
