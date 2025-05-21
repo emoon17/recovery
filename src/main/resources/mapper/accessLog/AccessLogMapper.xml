@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.wehago.accessLog.mapper.AccessLogMapper">
+    <insert id="insertAccessLog" parameterType="com.example.wehago.accessLog.dto.AccessLogEntity">
+        INSERT INTO access_log
+        (
+            ip_address,
+            user_agent,
+            referrer_url
+        )
+        VALUES (
+            #{ipAddress},
+            #{userAgent},
+            #{referrerUrl}
+               )
+
+    </insert>
+</mapper>
