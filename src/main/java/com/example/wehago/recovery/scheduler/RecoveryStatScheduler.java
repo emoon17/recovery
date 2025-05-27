@@ -18,7 +18,7 @@ public class RecoveryStatScheduler {
         this.recoverService = recoverService;
     }
 
-        @Scheduled(cron = "0 0 0 * * *") // 매일 자정
+        @Scheduled(cron = "0 40 23 * * *") // 매일 자정
 //    @Scheduled(cron = "0 * * * * *") // 테스트 1분마다
     public void runDailyRecoveryStat() {
         LocalDate statDate = LocalDate.now().minusDays(1);

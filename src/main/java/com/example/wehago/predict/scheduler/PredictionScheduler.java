@@ -19,8 +19,8 @@ public class PredictionScheduler {
     }
 
     // 매일 자정 실행 (0시 5분, DB 정리 시간 고려)
-    @Scheduled(cron = "0 5 0 * * *")
-//    @Scheduled(cron = "0 * * * * *") // 테스트 1분마다
+//    @Scheduled(cron = "0 5 0 * * *")
+    @Scheduled(cron = "0 55 23 * * *") // 테스트 1분마다
     public void runDailyPrediction() {
         LocalDate statDate = LocalDate.now().minusDays(1);
         log.info("[예측 스케줄러] {} 거래 회수 지연 예측 시작", statDate);
@@ -34,7 +34,7 @@ public class PredictionScheduler {
     }
 
 //        @Scheduled(cron = "0 * * * * *") // 매 분마다
-    @Scheduled(cron = "0 3 0 * * *")
+    @Scheduled(cron = "0 45 23 * * *")
     public void runTrainingJob() {
         LocalDate statDate = LocalDate.now().minusDays(1);
         log.info("[모델 학습 스케줄러] {} 모델 학습 스케줄러 시작", statDate);

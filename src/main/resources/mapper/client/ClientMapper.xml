@@ -4,7 +4,7 @@
 
 <mapper namespace="com.example.wehago.client.mapper.ClientMapper">
     <select id="findById" resultType="com.example.wehago.client.dto.ClientEntity">
-        SELECT email FROM client
+        SELECT email, expected_recovery_days FROM client
         WHERE client_id = #{id}
     </select>
     <select id="selectAllClients" resultType="com.example.wehago.client.dto.ClientEntity">
