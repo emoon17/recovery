@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PredictRiskTableResponse {
 
     private Long clientId;
+    private Integer predictionId;
     private Long txId;
     private String name;
     private Integer predictedDelay;      // 예측 지연일수

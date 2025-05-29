@@ -4,6 +4,7 @@ import com.example.wehago.client.service.ClientService;
 import com.example.wehago.predict.dto.*;
 import com.example.wehago.predict.flaskclient.FlaskPredictionClient;
 import com.example.wehago.predict.mapper.PredictionMapper;
+import com.example.wehago.transaction.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,14 @@ public class PredictionServiceImpl implements PredictionService {
     private final FlaskPredictionClient flaskClient;
     private final JavaMailSender mailSender;
     private final ClientService clientService;
+    private final TransactionService transactionService;
 
-    public PredictionServiceImpl(PredictionMapper predictionMapper, FlaskPredictionClient flaskClient, JavaMailSender mailSender, ClientService clientService) {
+    public PredictionServiceImpl(PredictionMapper predictionMapper, FlaskPredictionClient flaskClient, JavaMailSender mailSender, ClientService clientService, TransactionService transactionService) {
         this.predictionMapper = predictionMapper;
         this.flaskClient = flaskClient;
         this.mailSender = mailSender;
         this.clientService = clientService;
+        this.transactionService = transactionService;
     }
 
     @Override
@@ -36,11 +39,16 @@ public class PredictionServiceImpl implements PredictionService {
             try {
                 // 예측 모델 응답값
                 PredictionResponseDto response = flaskClient.predict(dto);
-
+                String txDate = transactionService.selectTransactionDateByTransactionId(String.valueOf(dto.getTxId()));
+                int abs = dto.getRealDelay() - response.getPredictedDelay();
                 PredictionRiskEntity risk = PredictionRiskEntity.builder()
                         .clientId(dto.getClientId())
                         .txId(dto.getTxId())
+                        .clientName(dto.getName())
+                        .realDelay(dto.getRealDelay())
+                        .transactionDate(txDate)
                         .predictedDelay(response.getPredictedDelay())
+                        .absError(abs)
                         .riskLevel(response.getRiskLevel())
                         .comment(response.getComment())
                         .build();

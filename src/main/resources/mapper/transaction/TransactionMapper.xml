@@ -72,6 +72,12 @@
         where  DATE(t.expected_payment_date) &lt; CURDATE()
         GROUP BY c.client_id, c.name
     </select>
+    <select id="selectTransactionDateByTransactionId" resultType="String">
+        SELECT
+            DATE(transaction_date)
+        FROM `transaction` t
+        WHERE t.transaction_id = #{transactionId}
+    </select>
 
     <update id="updateTransaction" parameterType="map">
         UPDATE `transaction` t

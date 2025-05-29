@@ -14,4 +14,5 @@ public interface TransactionService {
     void insertTransaction( TransactionRequestDto requestDto);
     List<TransactionRecoveryStatsResponseDto> getTransactionRecoveryStats();
     void updateTransaction(TransactionRequestDto requestDto);
+    String selectTransactionDateByTransactionId(String transactionId);
 }

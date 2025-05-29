@@ -29,7 +29,7 @@ public class DummyTransactionScheduler {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             int randomClientId = 24 + random.nextInt(21);
 
             // 지연일  (0~50일)
@@ -49,14 +49,6 @@ public class DummyTransactionScheduler {
             ClientEntity clientEntity  = clientMapper.findById(randomClientId);
 //            LocalDate expectedPaymentDate = transactionDate.plusDays(delayDays); // 지연일 기준 예정일
             LocalDate recoveredDate = null;
-//            int recoveredDays;
-//            if (recoveredDate != null) {
-//                // 실제 회수된 경우
-//                recoveredDays = (int) ChronoUnit.DAYS.between(transactionDate, recoveredDate);
-//            } else {
-//                // 회수 안 됐을 경우 어제 기준으로 계산
-//                recoveredDays = (int) ChronoUnit.DAYS.between(transactionDate, today.minusDays(1));
-//            }
 //            // 회수 예정일 = 거래일 + 회수일수
             LocalDate expectedPaymentDate = transactionDate.plusDays(clientEntity.getExpectedRecoveryDays());
             if (recoveryRate != 0) {
@@ -84,6 +76,6 @@ public class DummyTransactionScheduler {
             transactionMapper.insertTransaction(entity);
         }
 
-        System.out.println(" Dummy HIGH/LOW 거래 10건 자동 생성 완료 (자정 실행)");
+        System.out.println(" Dummy HIGH/LOW 거래 20건 자동 생성 완료 (자정 실행)");
     }
 }

@@ -62,5 +62,10 @@ public class TransactionServiceImpl implements TransactionService {
         transactionMapper.updateTransaction(transactionEntity);
     }
 
+    @Override
+    public String selectTransactionDateByTransactionId(String transactionId) {
+        return transactionMapper.selectTransactionDateByTransactionId(transactionId);
+    }
+
 
 }

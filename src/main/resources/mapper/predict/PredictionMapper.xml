@@ -8,30 +8,51 @@
     <select id="selectPredictionTargets" resultType="com.example.wehago.predict.dto.PredictionTargetDto">
     <!-- 회수 지연 request  -->
         SELECT
-            t.transaction_id AS tx_id,
-            t.client_id,
-            t.transaction_amount,
-            c.industry,
-            c.expected_recovery_days
-        FROM `transaction` t
-        JOIN `client` c
-            ON t.client_id = c.client_id
-        LEFT JOIN prediction_risk  pr
-            ON pr.tx_id = t.transaction_id
-        WHERE
-        (
-        t.recovered_date IS NULL  <!-- 아직 회수되지 않은 거래 거나 기간이 이미 늦은 거래-->
-        OR DATE(t.recovered_date) > DATE(t.expected_payment_date)
-        )
-        AND DATE(t.expected_payment_date) &lt;= DATE_SUB(CURDATE(), INTERVAL 1 DAY) <!-- 이미 회수 예정일이 지남(전날ㅈ기준) -->
-        group by t.transaction_id
+        t.transaction_id as txId,
+        c.client_id ,
+        c.name ,
+        MAX(t.transaction_date) ,
+        MAX(t.transaction_amount) as transactionAmount,
+        MAX(t.expected_payment_date) ,
+        c.industry,
+        c.expected_recovery_days,
+        MAX(t.recovered_date) ,
+        MAX(t.recovered_amount) ,
+        DATEDIFF(IFNULL(t.recovered_date, CURDATE()), t.expected_payment_date) AS real_delay        FROM `transaction` t
+        INNER JOIN  client c
+        ON c.client_id  = t.client_id
+        WHERE DATE(t.expected_payment_date) &lt;= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        AND (t.transaction_amount != t.recovered_amount or t.recovered_date is null)
+        GROUP BY t.transaction_id
+<!--        SELECT-->
+<!--            t.transaction_id AS tx_id,-->
+<!--            t.client_id,-->
+<!--            t.transaction_amount,-->
+<!--            c.industry,-->
+<!--            c.expected_recovery_days-->
+<!--        FROM `transaction` t-->
+<!--        JOIN `client` c-->
+<!--            ON t.client_id = c.client_id-->
+<!--        LEFT JOIN prediction_risk  pr-->
+<!--            ON pr.tx_id = t.transaction_id-->
+<!--        WHERE-->
+<!--        (-->
+<!--        t.recovered_date IS NULL  &lt;!&ndash; 아직 회수되지 않은 거래 거나 기간이 이미 늦은 거래&ndash;&gt;-->
+<!--        OR DATE(t.recovered_date) > DATE(t.expected_payment_date)-->
+<!--        )-->
+<!--        AND DATE(t.expected_payment_date) &lt;= DATE_SUB(CURDATE(), INTERVAL 1 DAY) &lt;!&ndash; 이미 회수 예정일이 지남(전날ㅈ기준) &ndash;&gt;-->
+<!--        group by t.transaction_id-->
 --         AND pr.tx_id IS NULL <!-- 테이블에 없음 => 아직 예측 안 된 거래  0 -->
     </select>
     <insert id="insertRiskPrediction" parameterType="com.example.wehago.predict.dto.PredictionRiskEntity">
         INSERT INTO prediction_risk (
             client_id,
             tx_id,
+            transaction_date,
+            client_name,
+            real_delay,
             predicted_delay,
+            abs_error,
             risk_level,
             comment,
             created_at,
@@ -39,7 +60,11 @@
         ) VALUES (
                      #{clientId},
                      #{txId},
+                     #{transactionDate},
+                     #{clientName},
+                     #{realDelay},
                      #{predictedDelay},
+                     #{absError},
                      #{riskLevel},
                      #{comment},
                      NOW(),
@@ -47,40 +72,20 @@
                  )
     </insert>
     <select id="getAllPredicts" resultType="com.example.wehago.predict.dto.PredictRiskTableResponse">
-        SELECT
-        pr.created_at,
-        MAX(c.name) AS name,
-        MAX(pr.client_id) AS client_id,
-        pr.tx_id,
-        MAX(pr.predicted_delay) AS predicted_delay,
-        MAX(t.transaction_date) AS transaction_date,
-        MAX(t.transaction_amount) AS transaction_amount,
-        MAX(t.recovered_amount) AS recovered_amount,
-        DATEDIFF(MAX(t.recovered_date), MAX(t.expected_payment_date)) AS real_delay,
-        ABS(DATEDIFF(MAX(t.recovered_date), MAX(t.expected_payment_date)) - MAX(pr.predicted_delay)) AS abs_error,
-        MAX(pr.risk_level) AS risk_level,
-        MAX(pr.comment) AS comment
-        FROM prediction_risk pr
-        INNER JOIN (
-        SELECT tx_id, client_id, DATE(created_at) AS created_date, MAX(created_at) AS latest_created_at
-        FROM prediction_risk
+        select
+            DATE(pr.created_at) as createdAt ,
+            MAX(pr.prediction_id) as predictionId,
+            MAX(pr.tx_id ) as txId,
+            MAX(DATE(pr.transaction_date)) as transactionDate,
+            MAX(pr.client_id) as clientId,
+            MAX(pr.client_name) as name,
+            MAX(pr.real_delay) as realDelay,
+            MAX(pr.predicted_delay) as predictedDelay,
+            MAX(pr.abs_error) as absError,
+            MAX(pr.risk_level) AS risk_level,
+            MAX(pr.comment) AS comment
+        from prediction_risk pr
         WHERE DATE(created_at) BETWEEN DATE_SUB(#{yesterday}, INTERVAL 6 DAY) AND #{yesterday}
-        GROUP BY tx_id, client_id, DATE(created_at)
-        ) latest
-        ON pr.tx_id = latest.tx_id
-        AND pr.client_id = latest.client_id
-        AND DATE(pr.created_at) = latest.created_date
-        AND pr.created_at = latest.latest_created_at
-        INNER JOIN `transaction` t
-        ON t.transaction_id = pr.tx_id
-        AND t.client_id = pr.client_id
-        INNER JOIN client c
-        ON c.client_id = t.client_id
-        WHERE (
-        t.recovered_date IS NULL
-        OR t.transaction_amount != t.recovered_amount
-        )
         GROUP BY pr.tx_id, pr.created_at
-        ORDER BY transaction_date DESC;
     </select>
 </mapper>

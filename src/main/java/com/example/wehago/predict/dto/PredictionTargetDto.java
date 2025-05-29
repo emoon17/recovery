@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 public class PredictionTargetDto {
     private Long txId;
     private Long clientId;
+    private String name;
     private Integer transactionAmount;
     private String industry;
     private Integer expectedRecoveryDays;
+    private Integer realDelay;
 }

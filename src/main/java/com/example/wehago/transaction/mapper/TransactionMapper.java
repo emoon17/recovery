@@ -13,4 +13,5 @@ public interface TransactionMapper {
     void insertTransaction(@Param("entity") TransactionEntity entity);
     List<TransactionRecoveryStatsResponseDto> selectTransactionRecoveryStats();
     void updateTransaction(@Param("entity") TransactionEntity entity);
+    String selectTransactionDateByTransactionId(@Param("transactionId") String transactionId);
 }
