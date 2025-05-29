@@ -78,7 +78,7 @@
         ON c.client_id = t.client_id
         WHERE (
         t.recovered_date IS NULL
-        OR pr.created_at &lt; t.recovered_date
+        OR t.transaction_amount != t.recovered_amount
         )
         GROUP BY pr.tx_id, pr.created_at
         ORDER BY transaction_date DESC;
